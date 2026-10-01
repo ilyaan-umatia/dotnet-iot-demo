@@ -11,7 +11,7 @@ A .NET API that publishes device readings to a local Mosquitto broker, with a ba
 ## Requirements
 
 - .NET 8 SDK or later
-- Mosquitto
+- Docker Desktop (Linux containers), or a local Mosquitto installation
 - OpenSSL (the setup script also supports OpenSSL included with Git for Windows)
 
 ## Run locally
@@ -24,7 +24,22 @@ Generate the local certificate once:
 ./scripts/New-LocalBrokerCertificate.ps1
 ```
 
-Start the broker:
+Start the broker with Docker Desktop running:
+
+```powershell
+docker compose up -d
+```
+
+To view broker logs or stop it:
+
+```powershell
+docker compose logs -f mosquitto
+docker compose down
+```
+
+The container uses `broker/mosquitto-docker.conf` and the local certificate files. The API and Worker still run with .NET on your computer.
+
+Alternatively, start the locally installed broker. Run only one broker on port `8883` at a time:
 
 ```powershell
 & 'C:\Program Files\Mosquitto\mosquitto.exe' -c broker/mosquitto-tls.conf -v
