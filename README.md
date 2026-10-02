@@ -86,6 +86,22 @@ Messages are published to `devices/{deviceId}/messages`. The Worker subscribes t
 
 Invalid device IDs and humidity outside 0–100 return `400 Bad Request`. This local broker uses TLS and allows connections without client authentication.
 
+### Local demo screenshots
+
+These screenshots are from the initial version, which sent text messages on `devices/messages`. The current version above uses structured device payloads and a topic for each device.
+
+Postman request and successful publish response:
+
+![Postman publishing a text message](docs/screenshots/local/postman.png)
+
+The subscriber receiving the published messages:
+
+![Subscriber receiving messages on devices/messages](docs/screenshots/local/subscriber.png)
+
+The locally installed Mosquitto broker accepting a TLS connection and topic subscription:
+
+![Mosquitto TLS connection and subscription logs](docs/screenshots/local/broker-tls.png)
+
 ## 2. Azure IoT flow
 
 The simulator and application API run on your computer. IoT Hub and Service Bus run in Azure. The local Publisher.Api, Subscriber.Worker and Mosquitto container are not needed for this flow.
@@ -124,7 +140,15 @@ dotnet run --project src/Device.Simulator -- --preview
 
 The Azure SDK handles authentication, TLS and IoT Hub's telemetry topic (`devices/{deviceId}/messages/events/`). This simulator connects directly to IoT Hub; Mosquitto is used by the original local demo.
 
+The registered `fridge-01` device and the simulator sending all 5 readings:
+
+![Device simulator sending readings and the registered Azure IoT Hub device](docs/screenshots/azure/device-simulator.png)
+
 Successful sending confirms IoT Hub accepted the messages. Configure a Service Bus queue endpoint and an enabled device telemetry route with query `true` in IoT Hub to forward new messages to the queue.
+
+Service Bus Explorer showing the 5 routed messages and a reading's JSON payload before the backend consumes them:
+
+![Service Bus queue with five device messages and a JSON payload](docs/screenshots/azure/service-bus-queue.png)
 
 ### Application backend
 
@@ -149,6 +173,10 @@ dotnet run --project src/Application.Api --launch-profile http
 Run the simulator in another terminal. Open `http://localhost:5114/devices` or `http://localhost:5114/devices/fridge-01` to see the latest processed reading, door status and temperature flag. Before any reading arrives, the list is empty and the individual device endpoint returns 404.
 
 The queue consumer uses AMQP with TLS on port `5671`. It completes messages after processing, removing them from the active queue. Invalid payloads go to the dead-letter queue. Without a local connection string, the API runs but the consumer is disabled and logs a configuration warning.
+
+The backend processing the readings, logging high-temperature warnings and returning the latest device status:
+
+![Backend processing queue messages and API returning the latest fridge status](docs/screenshots/azure/backend-api.png)
 
 Device status is kept in memory and resets when the backend restarts. Previously completed messages are not replayed; run the simulator again to populate fresh status. The latest reading's timestamp determines which status is kept, and high-temperature events are logged even if a later reading returns to normal.
 
