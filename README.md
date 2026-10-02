@@ -1,4 +1,4 @@
-# .NET MQTT Demo
+# .NET IoT Demo
 
 Two .NET examples: a local MQTT publisher/subscriber with Mosquitto, and a simulated device sending data through Azure IoT Hub and Service Bus to an application API.
 
