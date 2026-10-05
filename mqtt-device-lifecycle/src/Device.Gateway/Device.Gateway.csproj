@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MQTTnet" Version="5.2.0.1603" />
+    <PackageReference Include="Google.Protobuf" Version="3.36.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.84.0" PrivateAssets="All" />
+    <Protobuf Include="../../schemas/sparkplug_b.proto" GrpcServices="None" />
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../broker/certs/broker.crt" Link="certs/broker.crt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
