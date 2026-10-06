@@ -7,7 +7,7 @@ builder.Services.Configure<MqttSettings>(builder.Configuration.GetSection(MqttSe
 builder.Services.AddSingleton<MqttPublisher>();
 var app = builder.Build();
 
-app.MapGet("/", () => "Publisher API is running. Send POST /publish with JSON: {\"message\":\"Hello MQTT\"}");
+app.MapGet("/", () => "Publisher API is running. POST device readings to /publish.");
 
 app.MapPost("/publish", async (
     DeviceMessage request,
