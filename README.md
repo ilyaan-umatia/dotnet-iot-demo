@@ -1,14 +1,12 @@
 # .NET IoT Demo
 
-Three .NET examples: a local MQTT publisher/subscriber, an Azure IoT flow, and a gateway publishing Sparkplug B device lifecycle messages.
+Two .NET examples: a local MQTT publisher/subscriber and an Azure IoT flow.
 
 **Local flow:** Postman → Publisher.Api → Mosquitto → Subscriber.Worker.
 
 **Azure flow:** Device.Simulator → IoT Hub → Service Bus queue → GpioMessageService → Application.Api.
 
-**Device lifecycle flow:** Simulated fridge → Device.Gateway → Mosquitto → MQTTX.
-
-The local and Azure projects are in `src/`. The device lifecycle demo is in its own [mqtt-device-lifecycle](mqtt-device-lifecycle/README.md) folder.
+The local and Azure projects are in `src/`.
 
 ## Projects
 
@@ -19,7 +17,6 @@ The local and Azure projects are in `src/`. The device lifecycle demo is in its 
 | Device.Simulator | Azure flow | Sends simulated fridge readings and GPIO input to IoT Hub over MQTT. |
 | Application.Api | Azure flow | Consumes queue messages, processes them through GpioMessageService and exposes device status. |
 | Mqtt.Common | Both | Shared settings and message models. |
-| Device.Gateway | Device lifecycle demo | Publishes gateway/device birth, readings and offline messages, with connection states, reconnect and Last Will. |
 
 ## Requirements
 
@@ -186,11 +183,3 @@ The backend processing the readings, logging high-temperature warnings and retur
 Device status is kept in memory and resets when the backend restarts. Previously completed messages are not replayed; run the simulator again to populate fresh status. The latest reading's timestamp determines which status is kept, and high-temperature events are logged even if a later reading returns to normal.
 
 Flow: simulated device → MQTT/TLS → IoT Hub → routing → Service Bus queue → GpioMessageService → application API.
-
-## 3. MQTT device lifecycle
-
-The [device lifecycle demo](mqtt-device-lifecycle/README.md) uses the same local Mosquitto broker. A separate .NET gateway simulates a fridge and publishes Sparkplug B Protobuf messages. MQTTX decodes the payloads for inspection.
-
-It includes gateway/device online and offline messages, a connection state machine, automatic reconnect with increasing retry delays, and a broker Last Will for unexpected gateway disconnects.
-
-See its README for setup, topics and demo screenshots.
