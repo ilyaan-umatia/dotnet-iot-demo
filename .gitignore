@@ -6,4 +6,6 @@ obj/
 .dotnet-cli/
 broker/certs/
 *.user
-**/appsettings.Local.json
+appsettings.json
+state/
+logs/
