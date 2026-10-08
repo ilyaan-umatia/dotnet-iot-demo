@@ -44,7 +44,7 @@ public sealed class MqttConnection : IDisposable
         }
 
         _optionsBuilder = builder;
-        _sequenceStore = new BirthDeathSequenceStore(settings.ClientId);
+        _sequenceStore = new BirthDeathSequenceStore(settings.ClientId, settings.StateDirectory);
         _deathTopic = SparkplugTopics.NodeDeath(sparkplug);
         _client.DisconnectedAsync += _ =>
         {

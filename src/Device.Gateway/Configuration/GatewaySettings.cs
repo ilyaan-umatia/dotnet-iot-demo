@@ -18,6 +18,7 @@ public sealed class MqttSettings
     public string Host { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 8883;
     public string ClientId { get; set; } = "gateway-01";
+    public string StateDirectory { get; set; } = Path.Combine(AppContext.BaseDirectory, "state", "gateway");
     public bool UseTls { get; set; } = true;
     public string BrokerCertificatePath { get; set; } = "certs/broker.crt";
     public int ConnectTimeoutSeconds { get; set; } = 10;

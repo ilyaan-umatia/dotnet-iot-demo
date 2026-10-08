@@ -80,9 +80,12 @@ public sealed class ServiceBusConsumer(
                 throw new ArgumentException("Payload device identity does not match IoT Hub.");
             }
 
-            messageService.Process(reading);
-            logger.LogInformation("Processed {Type}: {GatewayId}/{DeviceId}",
-                reading.MessageType, reading.GatewayId, reading.DeviceId);
+            if (messageService.Process(reading))
+                logger.LogInformation("Processed {Type}: {GatewayId}/{DeviceId}",
+                    reading.MessageType, reading.GatewayId, reading.DeviceId);
+            else
+                logger.LogWarning("Saved {Type} to history without changing current state: {GatewayId}/{DeviceId}. Check births and timestamps.",
+                    reading.MessageType, reading.GatewayId, reading.DeviceId);
         }
         catch (Exception exception) when (exception is JsonException or ArgumentException)
         {
